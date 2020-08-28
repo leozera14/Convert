@@ -19,6 +19,7 @@
     "babel-loader": "^8.1.0",
     "babel-preset-es2020": "^1.0.2",
     "babel-preset-react": "^6.24.1",
+    "papaparse": "^5.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-papaparse": "^3.4.0",

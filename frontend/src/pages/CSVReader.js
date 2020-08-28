@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 
 import api from '../services/api';
 
-import { CSVReader } from 'react-papaparse';
+import { jsonToCSV, CSVReader } from 'react-papaparse';
 
 export default function CSVRead() {
   const buttonRef = React.createRef();
   const [info, setInfo] = useState([]);
+  const [file, setFile] = useState('');
   
 
   function handleOpenDialog(e) {
@@ -18,16 +19,18 @@ export default function CSVRead() {
   async function handleOnFileLoad(response) {
     let transformData = [];
     let novoData = [];
-    
+
     await response.map(item => {
-      transformData.push(item.data);
+       transformData.push(item.data);
     })
 
     const tamanho = transformData.length;
 
     for(let i = 0; i < tamanho; i++) {
-      let percorre = ([transformData[i][5], transformData[i][8]]);
-      novoData.push(percorre);
+      if(transformData[i][0] !== "") {
+        let percorre = ([transformData[i][5], transformData[i][8]]);
+        novoData.push(percorre);
+      }
     }
 
     novoData.map(data => {
@@ -90,18 +93,42 @@ export default function CSVRead() {
     }
   }
   
-  async function send(e) {
+  async function trataDados(evento, dados, nome) {
+    try {
+      if(evento === 200) {
+        var data = [];
+        dados.map(dado => {
+          dado.map(async d => {
+             data.push(d);
+          })
+        })
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(new Blob([jsonToCSV(data)]));
+        link.setAttribute('download', `${nome} - Convertido.csv`);
+        document.body.appendChild(link);
+        link.click();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  async function send(e, result) {
     e.preventDefault()
 
     const data = ({
       info
     })
 
+    console.log(data);
+
     try {
       await api.post('/file', data)
-          .then(function(response) {
-            console.log(response);
-          });
+          .then(async resp => {
+            await trataDados(resp.status, resp.data, file.name); 
+          })
+          .catch((e) => console.log('Erro ' + e))
 
     } catch (error) {
       console.log(error);
@@ -116,63 +143,51 @@ export default function CSVRead() {
       noClick
       noDrag
       onRemoveFile={handleOnRemoveFile}
+      noProgressBar
     >
       {({ file }) => (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            marginBottom: 10
-          }}
-        >
-          <button
-            type='button'
-            onClick={handleOpenDialog}
-            style={{
-              borderRadius: 0,
-              marginLeft: 0,
-              marginRight: 0,
-              width: '40%',
-              paddingLeft: 0,
-              paddingRight: 0
-            }}
-          >
-            Browse file
-          </button>
-          <div
-            style={{
-              borderWidth: 1,
-              borderStyle: 'solid',
-              borderColor: '#ccc',
-              height: 45,
-              lineHeight: 2.5,
-              marginTop: 5,
-              marginBottom: 5,
-              paddingLeft: 13,
-              paddingTop: 3,
-              width: '60%'
-            }}
-          >
-            {file && file.name}
-          </div>
-          <button
-            style={{
-              borderRadius: 0,
-              marginLeft: 0,
-              marginRight: 0,
-              paddingLeft: 20,
-              paddingRight: 20
-            }}
-            onClick={handleRemoveFile}
-          >
-            Remove
-          </button>
-          <br/>
-          <div>
+        <div className="mainDiv">
+          <div className="container">
+            <h1>Conversor de Arquivos</h1>
+            <div className="archiveContainer">
               <div>
-              <form onSubmit={send}>
-                <button button type="submit">Enviar</button>
-              </form>
+                <h2>Insira abaixo seu arquivo para conversão</h2>
+              </div>
+              <div className="archiveDiv">
+                <button
+                  className="button"
+                  type='button'
+                  onClick={handleOpenDialog}
+                  style={{
+                    background: 'rgb(29,111,234)'
+                  }}
+                >
+                  Escolher arquivo
+                </button>
+                <div className="archive">
+                  {file
+                  ?
+                  file && file.name
+                  : "Nenhum arquivo selecionado"
+                  }
+                </div>
+                <button
+                  className="button"
+                  onClick={handleRemoveFile}
+                  style={{
+                    background: 'rgb(170,52,17)'
+                  }}
+                >
+                  Remover
+                </button>
+              </div>
+              <div className="form">
+                <form onSubmit={send}>
+                  <button className="button" style={{ background: "rgb(63,63,63)", marginBottom: 20 }} type="submit">Converter</button>
+                  <a href="/consulta">Consultar Cupons Individualmente</a>
+                  {setFile(file)}
+                </form>
+            </div>
             </div>
           </div>
         </div>
