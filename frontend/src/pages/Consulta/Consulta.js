@@ -47,7 +47,6 @@ export default function Read() {
                 
                 {info
                 ? info.map(inf => (
-                  console.log(inf),
                   <div className="cupomInfo">
                     <p>Informações do Cupom:</p>
                     <p>Loja: &nbsp;<span>{inf.NROEMPRESA}</span></p>
