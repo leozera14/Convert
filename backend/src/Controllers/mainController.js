@@ -13,28 +13,51 @@ module.exports = {
         and a.nroempresa = d.nroempresa
         and b.nroempresa = c.nroempresa
         and b.nroempresa = d.nroempresa
-        and a.nrocheckout = b.nrocheckout
         and c.nroempresa = d.nroempresa
+        and a.nrocheckout = b.nrocheckout
         and c.nrocheckout = a.nrocheckout
         and c.nrocheckout = b.nrocheckout
         and c.seqpessoa = e.seqpessoa
+        and SUBSTR(c.observacao, 6, LENGTH(c.observacao) - 5) = b.coo
         and a.nroformapagto = c.nroformapagto
         and c.numerodf = d.numerodf
         and c.seriedf = d.seriedf
         and c.nroserieecf = d.nroserieecf
-        and to_char(a.dtahoremissao, 'DD/MM/YYYY') = to_char(c.dtahoremissao, 'DD/MM/YYYY')
         and b.dtamovimento = c.dtamovimento
         and a.codautorizacaotef = ?
+        and a.nsutef = ?
         and a.nroempresa = ?
         GROUP BY a.nrocheckout, a.nroempresa, c.numerodf, a.vlrtotal, a.dtahoremissao, c.seqpessoa, e.seqpessoa, e.nomerazao
-        having sum(d.vlritem) = a.vlrtotal
-        `,
-        [item[1], item[0]]
+        `, [item[2], item[1], item[0]]
       );
     });
 
     Promise.all(queries)
-      .then((responses) => res.status(200).json(responses))
+    
+      .then((responses) => {
+        let size = responses.length;
+
+        let newData = [];
+
+        for(i = 0; i < size; i++) {
+          if(responses[i].length === 0) {
+              let anotherData = [{
+              NROPDV: 'Informacao nao encontrada',
+              NROEMPRESA: '/',
+              SEQCLIENTE: '/',
+              NOMECLIENTE: '/',
+              NROCUPOM: '/',
+              DTAEMISSAO: '/',
+              VALOR: '/'
+            }]
+            newData.push(anotherData)
+          } else {
+            newData.push(responses[i]);
+          }
+        }
+
+        return res.status(200).json(newData);
+      })
       .catch((err) => console.log(err));
   },
 };

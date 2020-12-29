@@ -1,7 +1,7 @@
 import React from 'react';
-import './estilo.css';
+import './main-style.css';
 
-import CSVRead from '../CSVReader';
+import CSVRead from '../../components/CSVReader/CSVReader';
 
 export default function Read() {
     return (

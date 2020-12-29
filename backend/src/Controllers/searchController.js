@@ -2,7 +2,7 @@ const knexOra = require('../database/oracle');
 
 module.exports ={
   async searchOne(req, res) {
-    const { codAut, loja } = req.body;
+    const { codAut, nsuTef, loja } = req.body;
 
     const querie = await knexOra.raw(
         `SELECT a.nrocheckout as NROPDV, a.nroempresa, e.seqpessoa as SEQCLIENTE, e.nomerazao as NOMECLIENTE, c.numerodf as NROCUPOM,  to_char(a.dtahoremissao, 'DD/MM/YYYY') as DTAEMISSAO, a.vlrtotal as Valor
@@ -13,27 +13,26 @@ module.exports ={
         and a.nroempresa = d.nroempresa
         and b.nroempresa = c.nroempresa
         and b.nroempresa = d.nroempresa
-        and a.nrocheckout = b.nrocheckout
         and c.nroempresa = d.nroempresa
+        and a.nrocheckout = b.nrocheckout
         and c.nrocheckout = a.nrocheckout
         and c.nrocheckout = b.nrocheckout
         and c.seqpessoa = e.seqpessoa
+        and SUBSTR(c.observacao, 6, LENGTH(c.observacao) - 5) = b.coo
         and a.nroformapagto = c.nroformapagto
         and c.numerodf = d.numerodf
         and c.seriedf = d.seriedf
         and c.nroserieecf = d.nroserieecf
-        and to_char(a.dtahoremissao, 'DD/MM/YYYY') = to_char(c.dtahoremissao, 'DD/MM/YYYY')
         and b.dtamovimento = c.dtamovimento
-        and a.codautorizacaotef = ?
-        and a.nroempresa = ?
+        and a.codautorizacaotef = '${codAut}'
+        and a.nsutef = ${nsuTef}
+        and a.nroempresa = ${loja}
         GROUP BY a.nrocheckout, a.nroempresa, c.numerodf, a.vlrtotal, a.dtahoremissao, c.seqpessoa, e.seqpessoa, e.nomerazao
-        having sum(d.vlritem) = a.vlrtotal
-        `,
-        [codAut, loja]
+        `
       );
-
-    Promise.all(querie)
-      .then((responses) => res.status(200).json(responses))
-      .catch((err) => console.log(err));
+      
+      Promise.all(querie)
+        .then((responses) => res.status(200).json(responses))
+        .catch((err) => console.log(err));
   }
 }
