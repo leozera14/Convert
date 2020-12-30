@@ -39,40 +39,40 @@ export default function Read() {
           <Header />
 
           <div className="container-full">
-            <div className="container">
-              <div className="form-container">
-                <div className="tittle">
-                    <h1>Consulta Unitária de Cupons</h1>
-                    <h2>Digite as informações abaixo para consultar o Cupom.</h2>
-                </div>
-                  
-                  <form onSubmit={Search}>
+            <div className="form-container">
+              <div className="title">
+                  <h1>Digite as informações para consultar o Cupom</h1>
+              </div>
+
+              <div className="form-content">
+                <form onSubmit={Search}>
                     <input type="text" value={codAut} onChange={e => setcodAut(e.target.value)} placeholder="Digite o código de Autorização"/>
                     <input type="text" value={nsuTef} onChange={e => setnsuTef(e.target.value)} placeholder="Digite o NSUTEF"/>
                     <input type="text" value={loja} onChange={e => setLoja(e.target.value)} placeholder="Digite o numero da Loja"/>
                     <button className="botao" type="submit">Pesquisar</button>
-                  </form>
+                </form>
+              </div>    
+              
 
                   
-                  {info
-                  ? info.map(inf => (
-                    <div className="cupomInfo">
-                      <p>Informações do Cupom:</p>
-                      <p>Loja: &nbsp;<span>{inf.NROEMPRESA}</span></p>
-                      <p>PDV:  &nbsp;<span>{inf.NROPDV}</span></p>
-                      <p>Seq Cliente:  &nbsp;<span>{inf.SEQCLIENTE}</span></p>
-                      <p>Nome Cliente:  &nbsp;<span>{inf.NOMECLIENTE}</span></p>
-                      <p>Cupom:  &nbsp;<span>{inf.NROCUPOM}</span></p>
-                      <p>Valor:  &nbsp;<span>{parseFloat(inf.VALOR.toFixed(2))}</span></p>
-                      <p>Data:  &nbsp;<span>{inf.DTAEMISSAO}</span></p>
-                    </div>
-                  ))
-                  : <div className="noData">
-                      <p>Sem dados para mostrar</p>
-                    </div> 
-                  }
-                  
-                </div>
+              {info
+              ? info.map(inf => (
+              <div className="cupomInfo">
+                <h2>Informações do Cupom:</h2>
+                <p>Loja: &nbsp;<span>{inf.NROEMPRESA}</span></p>
+                <p>PDV:  &nbsp;<span>{inf.NROPDV}</span></p>
+                <p>Seq Cliente:  &nbsp;<span>{inf.SEQCLIENTE}</span></p>
+                <p>Nome Cliente:  &nbsp;<span>{inf.NOMECLIENTE}</span></p>
+                <p>Cupom:  &nbsp;<span>{inf.NROCUPOM}</span></p>
+                <p>Valor:  &nbsp;<span>{parseFloat(inf.VALOR.toFixed(2))}</span></p>
+                <p>Data:  &nbsp;<span>{inf.DTAEMISSAO}</span></p>
+              </div>
+              ))
+              : 
+              <div className="noData">
+                <p>Sem dados para mostrar</p>
+              </div> 
+              }      
             </div>
           </div>
 

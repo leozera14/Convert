@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './header-style.css'
-import headerLogo from '../../images/header.png'
-import headerLogoTest from '../../images/header-test.jpg'
+import headerLogo from '../../images/header.jpg'
 
 export default function Header() {
 
@@ -14,7 +13,7 @@ export default function Header() {
           <li>
            <Link to="/">
               <figure>
-                <img src={headerLogoTest} alt="A"/>
+                <img src={headerLogo} alt="A"/>
               </figure> 
            </Link>    
           </li>

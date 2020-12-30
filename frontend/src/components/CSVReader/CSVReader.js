@@ -158,51 +158,51 @@ export default function CSVRead() {
         noProgressBar
       >
         {({ file }) => (
-          <div className="mainDiv">
-            <div className="container">
-              <h1>Conversor de Arquivos</h1>
+          <div className="wrap-container">
+            <div className="container-main">
 
-              <div className="archiveContainer">
-                <div>
-                  <h2>Insira abaixo seu arquivo para conversão</h2>
-                </div>
-                <div className="archiveDiv">
-                  <button
-                    className="button"
-                    type='button'
-                    onClick={handleOpenDialog}
-                    style={{
-                      background: 'rgb(29,111,234)'
-                    }}
-                  >
-                    Escolher arquivo
-                  </button>
-                  <div className="archive">
-                    {file
-                    ?
-                    file && file.name
-                    : "Nenhum arquivo selecionado"
-                    }
-                  </div>
-                  <button
-                    className="button"
-                    onClick={handleRemoveFile}
-                    style={{
-                      background: 'rgb(170,52,17)'
-                    }}
-                  >
-                    Remover
-                  </button>
-                </div>
-                <div className="form">
-                  <form onSubmit={send}>
-                    <button className="button" style={{ background: "rgb(63,63,63)", marginBottom: 20 }} type="submit">Converter</button>
-                    {setFile(file)}
-                  </form>
+              <div className="archive-title">
+                <h1>Insira abaixo seu arquivo para conversão</h1>
               </div>
+
+              <div className="archive-content">
+                <button
+                  className="button button-standard"
+                  type='button'
+                  onClick={handleOpenDialog}
+                >
+                  Escolher arquivo
+                </button>
+              
+
+                <div className="archive">
+                  {file
+                  ?
+                  file && file.name
+                  : "Nenhum arquivo selecionado"
+                  }
+                </div>
+                <button
+                  className="button button-remove"
+                  onClick={handleRemoveFile}
+                >
+                  Remover
+                </button>
+              </div>
+
+              <div className="archive-form">
+                <form onSubmit={send}>
+                  <button 
+                  className="button button-convert"
+                  type="submit">
+                    Converter
+                  </button>
+                  {setFile(file)}
+                </form>
               </div>
             </div>
           </div>
+            
         )}
       </CSVReader>
       
