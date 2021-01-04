@@ -4,13 +4,15 @@ import api from '../../services/api';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { jsonToCSV, CSVReader } from 'react-papaparse';
 
 export default function CSVRead() {
   const buttonRef = React.createRef();
   const [info, setInfo] = useState([]);
   const [file, setFile] = useState('');
-  
 
   function handleOpenDialog(e) {
     if (buttonRef.current) {
@@ -83,6 +85,8 @@ export default function CSVRead() {
       }
     })
     setInfo(novoData);
+
+    toast.info('Arquivo inserido com sucesso...')
   }
 
 
@@ -91,7 +95,7 @@ export default function CSVRead() {
   }
 
   function handleOnRemoveFile(data) {
-    console.log(data)
+    toast.info('Arquivo removido com sucesso...')
   }
 
   function handleRemoveFile(e) {
@@ -110,6 +114,7 @@ export default function CSVRead() {
     try {
       await api.post('/file', data)
           .then(async resp => {
+            toast.info('O arquivo será baixado automaticamente, aguarde alguns instantes...')
             await trataDados(resp.status, resp.data, file.name); 
           })
           .catch((e) => console.log('Erro ' + e))
@@ -125,8 +130,6 @@ export default function CSVRead() {
       if(evento === 200) {
         var data = [];
 
-        console.log(dados);
-
         dados.map(dado => {
           dado.map(async d => {
              data.push(d);
@@ -138,9 +141,11 @@ export default function CSVRead() {
         link.setAttribute('download', `${nome} - Convertido.csv`);
         document.body.appendChild(link);
         link.click();
+
+        toast.success('Arquivo criado com sucesso !!')
       }
     } catch (error) {
-      console.log(error);
+      toast.error('Erro ao criar arquivo !!');
     }
   }
 
@@ -205,6 +210,19 @@ export default function CSVRead() {
             
         )}
       </CSVReader>
+
+      <ToastContainer
+      position="top-right"
+      autoClose={4500}
+      transition={Slide}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={false}
+      draggable
+      pauseOnHover={false}
+      />
       
       <Footer />
     </>

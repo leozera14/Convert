@@ -32,7 +32,24 @@ module.exports ={
       );
       
       Promise.all(querie)
-        .then((responses) => res.status(200).json(responses))
+        .then((responses) => {
+          let size = responses.length;
+
+          if (size === 0) {
+            let anotherData = [{
+              NROPDV: 'Cupom não encontrado...',
+              NROEMPRESA: 'Cupom não encontrado...',
+              SEQCLIENTE: '/',
+              NOMECLIENTE: '/',
+              NROCUPOM: '/',
+              DTAEMISSAO: '/',
+              VALOR: '/'
+            }]
+            return res.status(400).json({ error: anotherData });
+          } else {
+            return res.status(200).json(responses)
+          }
+        })
         .catch((err) => console.log(err));
   }
 }

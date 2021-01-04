@@ -1,3 +1,13 @@
+@media screen and (max-width: 1366px) {
+  .separator-footer {
+    margin-top: 3em !important;
+  }
+
+  .content-footer {
+    margin-bottom: 1em !important;
+  } 
+}
+
 .footer-container {
   bottom: 0;
   left: 0;
